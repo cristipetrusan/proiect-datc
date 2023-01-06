@@ -7,7 +7,7 @@ namespace CityDangersAlertAPI.Controllers;
 [Route("[controller]")]
 public class CityDangersController : ControllerBase
 {
-    CityDangersRepo repo = new CityDangersRepo();
+    private static CityDangersRepo repo = new CityDangersRepo();
     private static readonly string[] Summaries = new[]
     {
         "Pothole", "Trash", "Other"
