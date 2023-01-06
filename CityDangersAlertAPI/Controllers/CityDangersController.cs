@@ -1,4 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Threading.Tasks;
+using Microsoft.Azure.Cosmos.Table;
+using CityDangersAlertAPI.Controllers;
 
 namespace CityDangersAlertAPI.Controllers;
 
@@ -7,15 +11,7 @@ namespace CityDangersAlertAPI.Controllers;
 [Route("[controller]")]
 public class CityDangersController : ControllerBase
 {
-    private static CityDangersRepo repo = new CityDangersRepo();
-    private static readonly string[] Summaries = new[]
-    {
-        "Pothole", "Trash", "Other"
-    };
-    private static readonly string[] Locations = new[]
-    {
-        "Townhall", "IuliusTown", "ShoppingCity"
-    };
+    // private static CityDangersRepo repo = new CityDangersRepo();
 
     private readonly ILogger<CityDangersController> _logger;
 
@@ -27,21 +23,43 @@ public class CityDangersController : ControllerBase
     [HttpGet(Name = "GetCityDangers")]
     public IEnumerable<CityDanger> Get()
     {
-        // return Enumerable.Range(1, 5).Select(index => new CityDanger
-        // {
-        //     Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-        //     Location = Locations[Random.Shared.Next(Locations.Length)],
-        //     Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-        // })
-        // .ToArray();
-        return repo.GetRepo();
+
+        CloudStorageAccount storageAccount;
+        storageAccount = CloudStorageAccount.Parse(Const.STORAGE_CONNECTION_STRING);
+
+        CloudTableClient tableClient = storageAccount.CreateCloudTableClient(new TableClientConfiguration());
+        CloudTable table = tableClient.GetTableReference(Const.TABLE_NAME);
+
+        List<CityDanger> customerEntities = new List<CityDanger>();
+
+        TableQuery<CityDanger> query = new TableQuery<CityDanger>();
+
+        foreach (CityDanger entity in table.ExecuteQuery(query))
+        {
+            customerEntities.Add(entity);
+        }
+
+        return customerEntities;
     }
 
     [HttpPost(Name = "PostCityDangers")]
-    public void Post([FromBody]CityDanger cityDanger)
+    public async Task PostAsync([FromBody]CityDanger customerEntity)
     {
-        repo.Add(cityDanger);
-        Console.WriteLine(cityDanger);
-    }
+        CloudStorageAccount storageAccount;
+        storageAccount = CloudStorageAccount.Parse(Const.STORAGE_CONNECTION_STRING);
 
+        CloudTableClient tableClient = storageAccount.CreateCloudTableClient(new TableClientConfiguration());
+        CloudTable table = tableClient.GetTableReference(Const.TABLE_NAME);
+
+        List<CityDanger> customerEntities = new List<CityDanger>();
+
+        TableQuery<CityDanger> query = new TableQuery<CityDanger>();
+
+        TableOperation insertOrMergeOperation = TableOperation.InsertOrMerge(customerEntity);
+
+        // Execute the operation.
+        TableResult result = await table.ExecuteAsync(insertOrMergeOperation);
+
+        Console.WriteLine(customerEntity);
+    }
 }
