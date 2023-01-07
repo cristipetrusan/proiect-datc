@@ -1,4 +1,4 @@
-import { Counter } from "./components/Counter";
+import { PostDangerForm } from "./components/AddDanger";
 import { FetchData } from "./components/FetchData";
 import { Home } from "./components/Home";
 
@@ -9,7 +9,7 @@ const AppRoutes = [
   },
   {
     path: '/counter',
-    element: <Counter />
+    element: <PostDangerForm />
   },
   {
     path: '/fetch-data',

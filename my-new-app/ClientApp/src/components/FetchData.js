@@ -5,14 +5,14 @@ export class FetchData extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { forecasts: [], loading: true };
+    this.state = { cityDangers: [], loading: true };
   }
 
   componentDidMount() {
-    this.populateWeatherData();
+    this.populateCityDangerrData();
   }
 
-  static renderForecastsTable(forecasts) {
+  static renderCityDangersTable(cityDangers) {
     return (
       <table className="table table-striped" aria-labelledby="tableLabel">
         <thead>
@@ -28,14 +28,14 @@ export class FetchData extends Component {
           </tr>
         </thead>
         <tbody>
-          {forecasts.map(forecast =>
+          {cityDangers.map(cityDanger =>
             <tr>
-              <td>{forecast.partitionKey}</td>
-              <td>{forecast.rowKey}</td>
-              <td>{forecast.status}</td>              
-              <td>{forecast.summary}</td>
-              <td>{forecast.owner}</td>
-              <td>{forecast.timestamp}</td>
+              <td>{cityDanger.partitionKey}</td>
+              <td>{cityDanger.rowKey}</td>
+              <td>{cityDanger.status}</td>              
+              <td>{cityDanger.summary}</td>
+              <td>{cityDanger.owner}</td>
+              <td>{cityDanger.timestamp}</td>
             </tr>
           )}
         </tbody>
@@ -46,20 +46,20 @@ export class FetchData extends Component {
   render() {
     let contents = this.state.loading
       ? <p><em>Loading...</em></p>
-      : FetchData.renderForecastsTable(this.state.forecasts);
+      : FetchData.renderCityDangersTable(this.state.cityDangers);
 
     return (
       <div>
-        <h1 id="tableLabel">Weather forecast</h1>
+        <h1 id="tableLabel">CityDangerr cityDanger</h1>
         <p>This component demonstrates fetching data from the server.</p>
         {contents}
       </div>
     );
   }
 
-  async populateWeatherData() {
+  async populateCityDangerrData() {
     const response = await fetch('citydangers');
     const data = await response.json();
-    this.setState({ forecasts: data, loading: false });
+    this.setState({ cityDangers: data, loading: false });
   }
 }
