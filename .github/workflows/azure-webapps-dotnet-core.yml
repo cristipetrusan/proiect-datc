@@ -29,10 +29,16 @@ jobs:
           dotnet build --configuration Release
           dotnet publish -c Release -o '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/myapp' 
           
-      # Deploy to Azure Web apps
-      - name: 'Run Azure webapp deploy action using publish profile credentials'
-        uses: azure/webapps-deploy@v2
-        with: 
-          app-name: ${{ env.AZURE_WEBAPP_NAME }} # Replace with your app name
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE  }} # Define secret variable in repository settings as per action documentation
-          package: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/myapp'
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Authenticate with Azure
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      # Deploy the application to Azure using the Azure CLI
+      - script: |
+          az webapp up --name my-web-app --location westus --sku F1 --image "mcr.microsoft.com/dotnet/core/sdk:$DOTNET_VERSION"
+        displayName: Deploy to Azure
