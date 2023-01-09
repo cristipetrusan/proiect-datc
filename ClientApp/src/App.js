@@ -28,7 +28,7 @@ export class App extends Component {
     return (
       <Layout>
         {!isLoggedIn ? (
-          <Login handleLogin={this.handleLogin} />
+             <NavMenu isLoggedIn={isLoggedIn} userType={userType} />
         ) : (
           <>
             <NavMenu isLoggedIn={isLoggedIn} />
