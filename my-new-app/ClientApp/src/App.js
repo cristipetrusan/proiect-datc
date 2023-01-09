@@ -1,8 +1,9 @@
+
 import React, { Component } from "react";
 import { Route, Routes } from "react-router-dom";
-import AppRoutes from "./AppRoutes";
+import {normalUserRoutes, adminUserRoutes } from "./AppRoutes";
 import { Layout } from "./components/Layout";
-import Login from "./components/Login"; // Add this line
+import Login from "./components/Login";
 import NavMenu from "./components/NavMenu"; 
 import "./custom.css";
 
@@ -17,8 +18,13 @@ export class App extends Component {
   }
 
   render() {
-    const { isLoggedIn } = this.state;
-
+    const { isLoggedIn, userType } = this.state;
+    let routes;
+    if (userType === 'admin') {
+      routes = adminUserRoutes;
+    } else if (userType === 'normal') {
+      routes = normalUserRoutes;
+    }
     return (
       <Layout>
         {!isLoggedIn ? (
@@ -27,7 +33,7 @@ export class App extends Component {
           <>
             <NavMenu isLoggedIn={isLoggedIn} />
             <Routes>
-              {AppRoutes.map((route, index) => {
+              {routes.map((route, index) => {
                 const { element, ...rest } = route;
                 return <Route key={index} {...rest} element={element} />;
               })}

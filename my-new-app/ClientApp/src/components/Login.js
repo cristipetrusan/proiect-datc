@@ -15,12 +15,11 @@ class Login extends Component {
     // Validate the username and password
     if (this.state.username === 'admin' && this.state.password === 'admin') {
       this.props.handleLogin('admin');
-      this.history.push('/home');
       return;
     }
     if (this.state.username === 'user' && this.state.password === 'user') {
       this.props.handleLogin('normal');
-      this.history.push('/home');
+      return;
     }
   };
 
@@ -41,14 +40,6 @@ class Login extends Component {
         <label>
           <p>Password: 
           <input type="password" name="password" value={this.state.password} onChange={this.handleChange} /></p> 
-        </label>
-        <br />
-        <label>
-          <p>User type:  
-          <select name="userType" value={this.state.userType} onChange={this.handleChange} >
-            <option value="normal">Normal</option>
-            <option value="admin">Admin</option>
-          </select></p>
         </label>
         <br />
         <button type="submit">Submit</button>
