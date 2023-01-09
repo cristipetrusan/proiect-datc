@@ -14,12 +14,6 @@ export class PostDangerForm extends Component {
     }
   }
 
-  incrementCounter() {
-    this.setState({
-      currentCount: this.state.currentCount + 1
-    });
-  }
-
   changeHandler = (e) => {
     this.setState({ [e.target.name]: e.target.value })
   }
@@ -27,7 +21,6 @@ export class PostDangerForm extends Component {
 
   submitHandler = e => {
     e.preventDefault();
-
     fetch('https://localhost:44424/citydangers', {
       method: 'POST',
       body: JSON.stringify(this.state),
