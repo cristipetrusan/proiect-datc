@@ -1,19 +1,26 @@
----
 name: .NET Core CI
-on: push
+
+on: [push]
+
 env:
-  AZURE_WEBAPP_NAME: my-new-app
-  AZURE_WEBAPP_PACKAGE_PATH: .
-  DOTNET_VERSION: "6.0"
+  AZURE_WEBAPP_NAME: my-new-app    # set this to your application's name
+  AZURE_WEBAPP_PACKAGE_PATH: '.'      # set this to the path to your web app project, defaults to the repository root
+  DOTNET_VERSION: '6.0'           # set this to the dot net version to use
+
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
+      # Checkout the repo
       - uses: actions/checkout@main
+      
+      # Setup .NET Core SDK
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
+
       - name: Set up dependency caching for faster builds
         uses: actions/cache@v3
         with:
@@ -21,22 +28,33 @@ jobs:
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
           restore-keys: |
             ${{ runner.os }}-nuget-
+
       - name: Build with dotnet
-        run: cd my-new-app dotnet build --configuration Release
+        run:
+          cd my-new-app 
+          dotnet build --configuration Release
+
       - name: dotnet publish
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp cd ..
+        run: 
+          dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+          cd ..
+
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
           name: .net-app
           path: ${{env.DOTNET_ROOT}}/myapp
+
   deploy:
     runs-on: ubuntu-latest
+
     steps:
+      # Authenticate with Azure
       - uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-      - script: >
-          az webapp up --name my-web-app --location westus --sku F1 --image
-          "mcr.microsoft.com/dotnet/core/sdk:$DOTNET_VERSION"
+
+      # Deploy the application to Azure using the Azure CLI
+      - script: |
+          az webapp up --name my-web-app --location westus --sku F1 --image "mcr.microsoft.com/dotnet/core/sdk:$DOTNET_VERSION"
         displayName: Deploy to Azure
