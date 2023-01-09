@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 
 export class PostDangerForm extends Component {
   static displayName = PostDangerForm.name;
