@@ -21,7 +21,6 @@ export class PostDangerForm extends Component {
 
   submitHandler = e => {
     e.preventDefault();
-  
     fetch('https://localhost:44424/citydangers', {
       method: 'POST',
       body: JSON.stringify(this.state),
