@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 
 export class PostDangerForm extends Component {
   static displayName = PostDangerForm.name;
@@ -27,17 +26,23 @@ export class PostDangerForm extends Component {
 
 
   submitHandler = e => {
-		e.preventDefault()
-		console.log(this.state)
-		axios
-			.post('https://localhost:44424/citydangers', this.state)
-			.then(response => {
-				console.log(response)
-			})
-			.catch(error => {
-				console.log(error)
-			})
-	}
+    e.preventDefault();
+
+    fetch('https://localhost:44424/citydangers', {
+      method: 'POST',
+      body: JSON.stringify(this.state),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
 
   render() {
     const { partitionKey, rowKey, summary, owner } = this.state
