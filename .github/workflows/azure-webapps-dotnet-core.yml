@@ -37,14 +37,12 @@ jobs:
             ${{ runner.os }}-nuget-
 
       - name: Build with dotnet
-        run:
-          cd my-new-app 
-          dotnet build --configuration Release
+        run: 
+          cd my-new-app && dotnet build --configuration Release
 
       - name: dotnet publish
         run: 
-          dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
-          cd ..
+          dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp && cd ..
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
