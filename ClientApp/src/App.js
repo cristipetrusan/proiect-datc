@@ -3,7 +3,6 @@ import React, { Component } from "react";
 import { Route, Routes } from "react-router-dom";
 import {normalUserRoutes, adminUserRoutes } from "./AppRoutes";
 import { Layout } from "./components/Layout";
-import Login from "./components/Login";
 import NavMenu from "./components/NavMenu"; 
 import "./custom.css";
 
