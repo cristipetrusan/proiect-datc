@@ -31,7 +31,7 @@ export class App extends Component {
           <Login handleLogin={this.handleLogin} />
         ) : (
           <>
-            <NavMenu isLoggedIn={isLoggedIn} />
+            <NavMenu isLoggedIn={isLoggedIn} userType={userType} />
             <Routes>
               {routes.map((route, index) => {
                 const { element, ...rest } = route;

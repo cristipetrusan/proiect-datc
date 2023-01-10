@@ -12,13 +12,6 @@ export class AdminFetchData extends Component {
     this.populateCityDangerrData();
   }
 
-  // deleteSelectedRows() {
-  //   const checkboxes = document.querySelectorAll('input[type=checkbox]:checked');
-  //   const checkedIds = Array.from(checkboxes).map(checkbox => checkbox.value);
-  //   console.log(checkedIds);
-  //   // Here, you can send a request to the server to delete the rows with the checked IDs.
-  // }
-
   async deleteSelectedRows() {
     const checkboxes = document.querySelectorAll('input[type=checkbox]:checked');
     const checkedIds = Array.from(checkboxes).map(checkbox => checkbox.value);
@@ -36,6 +29,8 @@ export class AdminFetchData extends Component {
         console.error('Error deleting rows');
       }
     }
+    window.history.pushState({}, '', '/admin-fetch-data');
+    this.populateCityDangerrData();
   }
 
   static renderCityDangersTable(cityDangers) {
