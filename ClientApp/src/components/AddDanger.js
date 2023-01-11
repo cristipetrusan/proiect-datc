@@ -18,7 +18,11 @@ export class PostDangerForm extends Component {
     this.setState({ [e.target.name]: e.target.value })
   }
 
+  resetForm = () => {
+    this.setState({ partitionKey: "", rowKey: "", summary: "", owner: "" });
+  }
 
+  
   submitHandler = e => {
     e.preventDefault();
     fetch('citydangers', {
@@ -28,14 +32,29 @@ export class PostDangerForm extends Component {
         'Content-Type': 'application/json'
       }
     })
-      .then(response => response.json())
-      .then(data => {
-        console.log(data);
-      })
+      // .then(response => response.json())
+      .then(()=> {
+        console.log("done");
+        this.resetForm();
+    })
       .catch(error => {
         console.log(error);
       });
   };
+
+  getLocation = () => {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        this.setState({
+          rowKey: `${position.coords.latitude}, ${position.coords.longitude}`
+        });
+      },
+      (error) => {
+        console.error(error);
+      },
+      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+    );
+  }
 
   render() {
     const { partitionKey, rowKey, summary, owner } = this.state
@@ -50,15 +69,6 @@ export class PostDangerForm extends Component {
               type="text"
               name="partitionKey"
               value={partitionKey}
-              onChange={this.changeHandler}
-            />
-          </div>
-          <div>
-            <p>Location:</p>
-            <input
-              type="text"
-              name="rowKey"
-              value={rowKey}
               onChange={this.changeHandler}
             />
           </div>
@@ -80,9 +90,19 @@ export class PostDangerForm extends Component {
               onChange={this.changeHandler}
             />
           </div>
-          <p></p>
-          <button type="submit">SUBMIT</button>
+          <div>
+            <p>Location:</p>
+            <input
+              type="text"
+              name="rowKey"
+              value={rowKey}
+              onChange={this.changeHandler}
+            /> 
+          </div>
         </form>
+        <p><button onClick={this.getLocation}>Get Location</button></p>
+        
+        <button type="submit"  disabled={!(partitionKey && rowKey)} onClick={this.submitHandler}>SUBMIT</button>
       </div>
     );
   }
